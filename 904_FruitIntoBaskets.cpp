@@ -5,45 +5,24 @@ public:
             return 0;
         }
         
-        int idx1, frts1, idx2, frts2, maxFrts, i;
-        idx1 = frts1 = idx2 = frts2 = i = maxFrts = 0;
-
-        while (i < tree.size()) {
-            if (tree[i] == tree[idx1]) {
-                frts1 ++;
-                if (i - 1 > 0 && tree[i] != tree[i - 1]) {
-                    idx1 = i;
+        int result = 0;
+        unordered_map<int, int> window;
+        int left = 0;
+        
+        for(int i = 0; i < tree.size(); i ++) {
+            window[tree[i]] ++;
+            while (window.size() >= 3) {
+                window[tree[left]] --;
+                if (window[tree[left]] == 0) {
+                    window.erase(tree[left]);
                 }
-            } else if (tree[i] == tree[idx2]) {
-                frts2 ++;
-                if (i - 1 > 0 && tree[i] != tree[i - 1]) {
-                    idx2 = i;
-                }
-            } else {
-                if (maxFrts < frts1 + frts2) {
-                    maxFrts = frts1 + frts2;
-                }
-
-                if (idx1 < idx2) {
-                    frts1 = 1;
-                    frts2 = i - idx2;
-                    idx1 = i;
-                } else if (idx1 > idx2){
-                    frts1 = i - idx1;
-                    frts2 = 1;
-                    idx2 = i;
-                } else {
-                    idx2 = i;
-                    frts2 = 1;
-                }
+                left ++;
             }
-            i ++;
-        }
-
-        if (maxFrts < frts1 + frts2) {
-            maxFrts = frts1 + frts2;
+            if (result < i + 1 - left) {
+                result = i + 1 - left;
+            }
         }
         
-        return maxFrts;
+        return result;
     }
 };
